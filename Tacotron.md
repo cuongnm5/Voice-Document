@@ -28,3 +28,15 @@ Wavenet là một mô hình generative hiệu quả đối với audio. Nó cũn
 Theo hiểu biết của tác giả, (Wang) et al., 2016) đã nghiên cứu sớm nhất về việc xây dựng mô hình end-to-end TTS sử dụng seq2seq cùng voiwss attention. Tuy nhiên, nó đòi hỏi một mô hình Markov ẩn (HMM) được huấn luyện từ trước để giúp mô hình seq2seq học được sự liên kết (alignment). Đầu tiên, khó có thể biết được bao nhiêu alignment được học bởi seq2seq mỗi giây. Thứ hai, một vài tricks được dùng để lấy ra được một mô hình đã được huấn luyện, which the authors note hurts prosody. Thứ ba, nó dự đoán các tham số của vocoder, do vậy cần một bộ phát âm (vocoder). Hơn nữa, mô hình được huấn luyện trên đầu vào là đơn âm (phoneme) và kết quả thực nghiệm có phần bị hạn chế. 
 
 Char2Wav (Sotelo et al., 2017) là một mô hình end-to-end được thiết kế độc lập, có thể huấn luyện trên kí tự. Tuy nhiên, Char2Wav vẫn dự đoán tham số vocoder trước khi sử dụng SmapleRNN neural vocoder, trong khi Tacotron trực tiếp dự đoán raw spectrogram. Vì thế, seq2seq của họ và những mô hình SampleRNN cần được huấn luyện riêng trước, nhưng mô hình của tác gì có thể huấn luyện từ đầu luôn. Cuối cùng, tác giả áp dụng một số sửa đổi quan trọng đối với mô hình vanilla seq2seq. Như bên dưới, một mô hình seq2seq vanilla sẽ không hoạt động tốt đối với đầu vào ở mức kí tự.
+
+## 3. Kiến trúc mô hình
+
+Phần chính của Tacotron là một mô hình seq2seq với attention. Hình 1 bên trên miêu tả mô hình, bao gồm một encoder, một decoder dựa trê attention và một mạng post-processing. Ở mức cao, mô hình nhận kí tự làm đầu vào và tạo ra khung spectrogram và sau đó chuyển thành dạng sóng. Các thành phần được đề cập như hình dưới.
+
+![Image](images/figure2_tacotron.png)
+Figure 2: The CBHG (1-D convolution bank + highway network + bidirectional GRU) module
+adapted from Lee et al. (2016).
+
+### 3.1. CBHG Module
+
+Trước tiên chúng tôi mô tả một khối xây dựng có tên là CBHG, được minh họa trong Hình 2. CBHG bao gồm một băng gồm các bộ lọc tích chập 1-D, lấy cảm hứng từ highway networks và một Bidirectional RNN (bidirectional gated recurrent unit recurrent neural net). CBHG là một module hiệu quả để trích xuất các biểu diễn từ các chuỗi.
