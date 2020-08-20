@@ -35,7 +35,7 @@ Trong khi linear spectrograms bỏ qua thông tin pha, dẫn đến nhiều thô
 
 ### 3.2 Spectrogram Prediction Network.
 
-![Image](images/tacotron0.jpeg)
+![Image](../images/tacotron0.jpeg)
 
 #### Sơ lược.
 

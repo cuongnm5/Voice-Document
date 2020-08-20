@@ -17,7 +17,7 @@ Có rất nhiều lợi thế của hệ thống TTS end2end tích hợp, hệ t
 TTS thường được coi là large-scale inverse problem (vấn đề nghịch đảo quy mô lớn): Một nguồn nén cao (văn bản) được "giải nén" thành âm thanh. Vì một văn bản có thể tương ứng với các cách phát âm hoặc cách nói khác nhau, đây là một nhiệm vụ rất khó khăn cho một mô hình end-to-end. Mô hình này phải đối phó với các biến thể lớn ở mức tín hiệu cho một đầu vào nhất định.
 Hơn nữa, không giống như end-to-end nhận dạng tiếng nói hay dịch máy, output của TTS liên tục và thường dài hơn input. Các thuộc tính này gây ra lỗi dự đoán để tích lũy nhanh chóng. Trong paper này, chúng tôi đề xuất Tacotron, một mô hình generative TTS end-to-end dựa trên seq-to-seq với attention paradigm. Mô hình của chúng tôi nhận kí tự làm đầu vào và đầu ra là raw spectrogram, sử dụng một số kỹ thuật để cải thiện khả năng của mô hình vanilla seq2seq. Với cặp <text, audio>, Tacotron có thể được huấn luyện từ đầu với sự khởi tạo ngẫu nhiên. Nó không yêu cầu phoneme-level alignment, do đó nó có thể dễ dàng mở rộng quy mô để sử dụng một lượng lớn dữ liệu âm thanh với scripts. Với một kỹ thuật tổng hợp waveform đơn giản, Tacotron nhận được 3.82 điểm MOS trên ngôn ngữ tiếng Anh, vượt trội so với các hệ thống trước đây.
 
-![Image](images/tacotron-pic1.png)
+![Image](../images/tacotron-pic1.png)
 
 Figure 1: Kiến trúc mô hình. Mô hình nhận kí tự làm input và output là quang phổ tương ứng, sau đó được đưa qua thuật toán tái cấu trúc Griffin-Lim để tổng hợp thành tiếng nói.
 
@@ -33,7 +33,7 @@ Char2Wav (Sotelo et al., 2017) là một mô hình end-to-end được thiết k
 
 Phần chính của Tacotron là một mô hình seq2seq với attention. Hình 1 bên trên miêu tả mô hình, bao gồm một encoder, một decoder dựa trê attention và một mạng post-processing. Ở mức cao, mô hình nhận kí tự làm đầu vào và tạo ra khung spectrogram và sau đó chuyển thành dạng sóng. Các thành phần được đề cập như hình dưới.
 
-![Image](images/figure2_tacotron.png)
+![Image](../images/figure2_tacotron.png)
 Figure 2: The CBHG (1-D convolution bank + highway network + bidirectional GRU) module
 adapted from Lee et al. (2016).
 
@@ -45,7 +45,7 @@ Trước tiên tác giả mô tả một khối xây dựng có tên là CBHG, �
 
 Mục tiêu của bộ mã hóa (Encoder) là trích xuất các biểu diễn sâu của văn bản một cách tuần tự. Đầu vào của bộ mã hóa là một chuỗi ký tự, mỗi ký tự được biểu diễn ở dạng one-hot vertor và được nhúng vào một continuous vector. Tác giả sau đó áp dụng một tập hợp các biến đổi phi tuyến tính, gọi chung là "Pre-net" cho mỗi lần nhúng. Tác giả sử dụng một lớp nút thắt cổ chai với dropout như Pre-net , giúp hội tụ và cải thiện tính toán. Một module CBHG biến đổi đầu ra của Pre-net thành biểu diễn mã hóa cuối cùng, được sử dụng bởi attention module. Tác giả cho rằng mã hóa dựa trên CBHG không chỉ giảm overfitting mà còn ít phát âm sai hơn so với bộ mã hóa RNN nhiều lớp tiêu chuẩn.
 
-![Image](images/figure2_tacotron.png)
+![Image](../images/figure2_tacotron.png)
 Table 1: Hyper-parameters and network architectures. “conv-k-c-ReLU” denotes 1-D convolution
 with width k and c output channels with ReLU activation. FC stands for fully-connected
 
