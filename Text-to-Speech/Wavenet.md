@@ -22,7 +22,7 @@ trong PixelRNN). Câu hỏi mà paper này giải quyết là liệu các phươ
 trong việc tạo ra các dạng sóng âm thanh thô băng rộng hay không khi tín hiệu có độ phân giải thời gian rất cao, 
 ít nhất 16.000 mẫu mỗi giây.
 
-![Image](images/speech_signal.png)
+![Image](../images/speech_signal.png)
 
 Paper này giới thiệu về WaveNet, mô hình tạo ra audio dựa vào kiến trúc của PixelCNN. Những nội dung chính của công trình này
 như sau:
@@ -49,7 +49,7 @@ Xác suất chung của dạng sóng x = {x1 ,. . . , xT} được coi là một
  
  ### 2.1.DILATED CAUSAL CONVOLUTIONS
  
-  ![Image](images/causal-convolutional-layers.png)
+  ![Image](../images/causal-convolutional-layers.png)
   
  Điểm chính trong WaveNet là Causal convolutions. Bằng cách sử dụng causal convolutions, chúng ta có thể
  chắc chắn rằng model sẽ không vi phạm thứ tự khi chúng ta mô hình hóa dữ liệu: Dự đoán p(xt+1 | x1, ..., xt) sẽ không 
@@ -67,7 +67,7 @@ Ví dụ trong hình trên, receptive field chỉ có 5. Trong paper này chúng
 Một mạng tích chập giãn (dilated convolution) (còn được gọi là trous hay convolution with holes) là một tích chập trong đó filter được áp dụng trên một diện tích lớn hơn chiều dài của nó bằng cách bỏ qua giá trị đầu vào với một số bước nhất định.
 Nó tương đương với convolution có filter lớn và được làm giãn ra với các số 0, tuy nhiên hiệu quả hơn đáng kể. Một dilated convolution hiệu quả cho phép mạng hoạt động trên quy mô thô (coarser) hơn so với convolution thông thường. Tương tự pooling hay strided convolution tuy nhiên ở đây output và input có cùng size. Trong trường hợp đặc biệt, dilated convolution với dilation=1 tạo ra 1 convolution chuẩn. Hình bên dưới mô tả dilated causal convolutions với dilation=1, 2, 4, 8. Dilated convolutions trước đây đã được sử dụng nhiều trong các lĩnh vực khác nhau: xử lý tín hiệu, image segmentation.
 
-![Image](images/dcc.png)
+![Image](../images/dcc.png)
 
 Stacked dilated convolutions cho phép các mạng có được receptive fields rất lớn chỉ với một vài layers, trong khi vẫn giữ được độ phân giải của input trên toàn mạng cũng như hiệu quả tính toán tốt. Trong paper này, dilation được nhân đoi cho mỗi layer, lên đến giới hạn sau đó lặp lại, ví dụ: 1, 2, 4, .., 512, 1, 2, 4, .., 512, ... Intuition đằng sau cấu hình này là two-fold. Đầu tiên, tăng theo cấp số nhân hệ số delation và receptive field tăng theo cấp số nhân theo chiều sâu. Ví dụ: mỗi 1, 2, 4,..., 512 khối có receptive field kích thước 1024. Sau đó xếp chồng các khối này làm tăng khả năng mô hình và kích thước receptive field. 
 
@@ -77,7 +77,7 @@ Stacked dilated convolutions cho phép các mạng có được receptive fields
  
  Vì âm thanh raw thường được lưu dưới dạng một chuỗi các giá trị nguyên 16 bit (mỗi timestep), một lớp softmax sẽ cần đến 16^4=65536 xác suất trên mỗi timestep để mô hình hóa tất cả các giá trị có thể. Để làm điều này trở nên dễ hiểu hơn, đầu tiên chúng ta áp dụng một phép biến đổi theo luật u (luật u là một thuật toán nén-giãn tín hiệu tiêu chuẩn được sử dụng trong các hệ thống viễn thông số nhằm tối ưu hóa hệ thống, ví dụ như giảm dải động của một tín hiệu tương tự để lượng tử hóa và mã hóa nhị phân tín hiệu đó rồi truyền đi) cho dữ liệu, sau đó chuyển nó về 256 giá trị khả dĩ:
 
-![Image](images/ct0.png)
+![Image](../images/ct0.png)
 
 Trong đó -1 < xt < 1 và µ = 255. Lượng tử hóa phi tuyến tính này tạo ra một sự tái cấu trúc tốt hơn đáng kể so với sơ đồ lượng tử hóa tuyến tính đơn giản. Đặc biệt đối với lời nói, chúng tôi thấy rằng tín hiệu được tái tạo sau khi lượng tử hóa nghe rất giống với bản gốc.
 
@@ -85,13 +85,13 @@ Trong đó -1 < xt < 1 và µ = 255. Lượng tử hóa phi tuyến tính này t
  
  Paper sử dụng gated activation unit giống như của PixelCNN:
   
-  ![Image](images/ct1.png)   (2)
+  ![Image](../images/ct1.png)   (2)
   
  trong đó * biểu thị tích chập, (·) là nhân 2 ma trận, σ(·) là sigmoid function, k là index layer, f và g biểu thị filter và gate, W là một convolution filter có thể học được. Trong việc mô hình hóa tín hiệu âm thanh, hàm phi tuyến hoạt động tốt hơn đáng kể so với linear activation function được sửa đổi.
  
  ### 2.4 RESIDUAL AND SKIP CONNECTIONS
  
-  ![Image](images/Overview-of-the-residual-block-and-the-entire-architecture.png)
+  ![Image](../images/Overview-of-the-residual-block-and-the-entire-architecture.png)
   
   Cả residual và parameterised skip connections đều được sử dụng trên toàn mạng, để tăng tốc độ hội tụ và cho phép đào tạo các mô hình sâu hơn. Trong hình trên hiển thị một khối residual của mô hình, được xếp chồng lên nhau nhiều lần trong mạng.
   
@@ -100,7 +100,7 @@ Trong đó -1 < xt < 1 và µ = 255. Lượng tử hóa phi tuyến tính này t
  Given an additional input h, WaveNets can model the conditional distribution p (x | h) of the audio
 given this input. Eq. (1) now becomes:
 
-![Image](images/ct2.png)
+![Image](../images/ct2.png)
 
 By conditioning the model on other input variables, we can guide WaveNet’s generation to produce
 audio with the required characteristics. For example, in a multi-speaker setting we can choose the
@@ -111,7 +111,7 @@ We condition the model on other inputs in two different ways: global conditionin
 output distribution across all timesteps, e.g. a speaker embedding in a TTS model. The activation
 function from Eq. (2) now becomes:
 
-![Image](images/ct3.png)
+![Image](../images/ct3.png)
 
 where V∗,k is a learnable linear projection, and the vector VT∗,kh is broadcast over the time dimension.
 For local conditioning we have a second timeseries ht, possibly with a lower sampling frequency
@@ -120,7 +120,7 @@ using a transposed convolutional network (learned upsampling) that maps it to a 
 y = f(h) with the same resolution as the audio signal, which is then used in the activation unit as
 follows:
 
-![Image](images/ct4.png)
+![Image](../images/ct4.png)
 
 where Vf,k ∗y is now a 1×1 convolution. As an alternative to the transposed convolutional network,
 it is also possible to use Vf,k ∗h and repeat these values across time. We saw that this worked slightly
@@ -153,8 +153,8 @@ breathing and mouth movements of the speakers.
 
 ### 3.2 TEXT-TO-SPEECH
 
-![Image](images/6-Table1-1.png)
+![Image](../images/6-Table1-1.png)
 
 ### 3.3 MUSIC
 
-![Image](images/7-Figure5-1.png)
+![Image](../images/7-Figure5-1.png)
